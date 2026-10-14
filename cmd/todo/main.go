@@ -18,7 +18,6 @@ func main() {
 		fmt.Print(err)
 		return 
 	}
-
 	service := service.NewService(db)
 
 	handler := handler.NewHandler(service)

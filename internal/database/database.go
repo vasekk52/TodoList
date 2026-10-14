@@ -22,6 +22,7 @@ func NewPostgresDB(cfg model.Config) (*DB, error) {
 	if err != nil {
 	  return nil, err
 	}
+	
 	return &DB{db:db}, nil
 }
 
