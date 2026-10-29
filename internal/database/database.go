@@ -13,17 +13,20 @@ type DB struct {
 	db 	*sqlx.DB
 }
 
-func NewPostgresDB(cfg model.Config) (*DB, error) {
-	connStr := fmt.Sprintf(
-        "host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+func FormatStr(cfg model.Config) string {
+    return fmt.Sprintf(
+        "host=%v port=%v user=%v password=%v dbname=%v sslmode=disable",
         cfg.DB_HOST, cfg.DB_PORT, cfg.DB_USER, cfg.DB_PASS, cfg.DB_NAME,
     )
-	db, err := sqlx.Connect("postgres", connStr)
-	if err != nil {
-	  return nil, err
-	}
-	
-	return &DB{db:db}, nil
+}
+
+func NewPostgresDB(cfg model.Config) (*DB, error) {
+    connStr := FormatStr(cfg)
+    db, err := sqlx.Connect("postgres", connStr)
+    if err != nil {
+        return nil, err
+    }
+    return &DB{db: db}, nil
 }
 
 func (db *DB) CreateTodo(title string) (model.Todo, error){

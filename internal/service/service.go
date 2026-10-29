@@ -1,19 +1,30 @@
 package service
 
 import (
-	"todoapp/internal/database"
+	"errors"
 	"todoapp/internal/model"
 )
 
-type TodoService struct {
-	db *database.DB
+type TodoRepository interface {
+    CreateTodo(title string) (model.Todo, error)
+    GetTodo(id int) (model.Todo, error)
+    CompleteTodo(id int) (model.Todo, error)
+    DeleteTodo(id int) error
+    GetAllTodo() ([]model.Todo, error)
 }
 
-func NewService(db *database.DB) *TodoService {
+type TodoService struct {
+	db TodoRepository
+}
+
+func NewService(db TodoRepository) *TodoService {
 	return &TodoService{db:db}
 }
 
 func (s *TodoService) CreateTodo(title string) (model.Todo, error){
+	if title == "" {
+		return model.Todo{}, errors.New("title cant be empty")
+	}
 	todo, err := s.db.CreateTodo(title)
 	if err != nil {
 	  return model.Todo{}, err

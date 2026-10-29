@@ -5,13 +5,21 @@ import (
 	"net/http"
 	"strconv"
 	"todoapp/internal/model"
-	"todoapp/internal/service"
 )
-type Handler struct {
-	service *service.TodoService
+
+type TodoService interface {
+	CreateTodo(title string) (model.Todo, error)
+	GetTodo(id int) (model.Todo, error)
+	CompleteTodo(id int) (model.Todo, error)
+	DeleteTodo(id int) error
+	GetAllTodo() ([]model.Todo, error)
 }
 
-func NewHandler(service *service.TodoService) *Handler {
+type Handler struct {
+	service TodoService
+}
+
+func NewHandler(service TodoService) *Handler {
 	return &Handler{service: service}
 }
 
